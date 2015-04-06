@@ -119,12 +119,7 @@ if (isset($_POST['submit'])) {
 			if ($_FILES['imagefile']['error'][0] == '4' && !$_POST['nofile'] && $_POST['replythread'] == 0) {
 				AnonsabaCore::Error('Sorry', 'Please select a file to upload');
 			}
-			$idcount = $db->GetAll('SELECT COUNT(*) FROM `'.prefix.'posts` WHERE `boardname` = '.$db->quote($_POST['board']));
-			if ($idcount[0]['COUNT(*)'] == 0) {
-				$id = 1;
-			} else {
-				$id = $idcount[0]['COUNT(*)'] + 1;
-			}
+			$id = $db->GetOne('SELECT COALESCE(MAX(id),0) + 1 FROM `'.prefix.'posts` WHERE `boardname` = '.$db->quote($_POST['board']));
 			$newpostmsg = AnonsabaCore::ParsePost($_POST['message'], $_POST['board']);
 			$db->Execute('INSERT INTO `'.prefix.'posts` (`id`, `name`, `email`, `subject`, `message`, `password`, `level`, `parent`, `sticky`, `lock`, `rw`, `ip`, `ipid`, `boardname`, `time`, `bumped`) VALUES ('.$db->quote($id).', '.$db->quote(AnonsabaCore::trip($_POST['name'])).', '.$db->quote($_POST['em']).', '.$db->quote($_POST['subject']).', '.$db->quote($newpostmsg).', '.$db->quote($password).', '.$level.', '.$db->quote($_POST['replythread']).', '.$sticky.', '.$lock.', '.$rw.', '.$db->quote($ipaddy).', '.$db->quote(AnonsabaCore::Encrypt($ipaddy)).', '.$db->quote($_POST['board']).', '.time().', '.$bumped.')');
 			$board_core = new BoardCore();

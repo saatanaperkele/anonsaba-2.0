@@ -23,7 +23,7 @@ class Management {
 			$_SESSION['manageusername'] = $_POST['username'];
 			self::CreateSession($_POST['username']);
 			AnonsabaCore::Log($_POST['username'], 'Logged in', time());
-			header("Location: ".url.'management/index.php?side='.$side.'&action='.$action.'');
+			header("Location: ".url.'/management/index.php?side='.$side.'&action='.$action.'');
 		} else {
 			AnonsabaCore::Log($_POST['username'], 'Failed login Attempt (IP: '.$_SERVER['REMOTE_ADDR'].')', time());
 			AnonsabaCore::Error('Incorrect Username/Password', 'This has been logged');
@@ -31,7 +31,7 @@ class Management {
 	}
 	public static function Logout() {
 		self::DestroySession($_SESSION['manageusername']);
-		header("Location: ".url.'management/');
+		header("Location: ".url.'/management/');
 	}
 	public static function CreateSession($val) {
 		global $db;
@@ -824,12 +824,7 @@ if ($_POST['subject'] != '') {
 			} elseif (!$db->GetAll('SELECT * FROM `'.prefix.'posts` WHERE `boardname` = '.$db->quote($_POST['board']).' AND `id` = '.$_POST['id'])) {
 				$twig_data['message'] = '<font color="red">Thread doesn\'t exist!</font>';
 			} else {
-				$idcount = $db->GetAll('SELECT COUNT(*) FROM `'.prefix.'posts` WHERE `boardname` = '.$db->quote($_POST['newboard']));
-				if ($idcount[0]['COUNT(*)'] == 0) {
-					$newid = 1;
-				} else {
-					$newid = $idcount[0]['COUNT(*)'] + 1;
-				}
+				$newid = $db->GetOne('SELECT COALESCE(MAX(id),0) + 1 FROM `'.prefix.'posts` WHERE `boardname` = '.$db->quote($_POST['newboard']));
 				$from = fullpath . $_POST['board'] . '/res/'. $_POST['id'] . '.html';
 				@unlink($from);
 				$image = $db->GetOne('SELECT `file` FROM `'.prefix.'files` WHERE `board` = '.$db->quote($_POST['board']).' AND `id` = '.$_POST['id']);
