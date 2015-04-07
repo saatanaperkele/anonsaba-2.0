@@ -20,7 +20,7 @@
 	$config['constant'] = false;//Want to have a constant connection to the MySQL server? I would just leave this set at false
 	//Website paths
 	$config['fullpath'] = realpath(dirname(__DIR__)).'/';//Dont even change this
-	$config['url'] = 'http://localhost/';//Full URL including the trailing slash (Kusaba was stupid not to do this)
+	$config['url'] = 'http://localhost/anonsaba-2.0/';//Full URL including the trailing slash (Kusaba was stupid not to do this)
 	$config['cookies'] = '.localhost';// http://www.somechan.org/ would be .somechan.org or http://prefix.somechan.org would be prefix.somechan.org
 	//Twig paths
 	$config['dir'] = $config['fullpath'].'pages';
